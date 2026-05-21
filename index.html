@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free contract risk analyzer for freelancers. Paste your contract, detect risky clauses, get plain-English explanations, and safer alternatives — all in your browser.">
+  <meta name="theme-color" content="#0a0e1a">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Contract Risk Analyzer for Freelancers">
+  <meta property="og:description" content="Instantly detect risky clauses in your freelance contracts. Free, private, browser-based.">
+  <meta property="og:type" content="website">
+
+  <title>Contract Risk Analyzer — Protect Your Freelance Business</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+
+  <!-- ── Global Loader ── -->
+  <div id="global-loader">
+    <img src="favicon.svg" alt="ContractGuard" class="loader-logo">
+    <div class="loader-bar-container">
+      <div class="loader-bar"></div>
+    </div>
+  </div>
+
+  <!-- ── Custom Cursor ── -->
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- ── Scroll Progress ── -->
+  <div id="scroll-progress-container">
+    <div id="scroll-progress"></div>
+  </div>
+
+  <!-- ── Particle Canvas Background ── -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- ── Navigation Bar ── -->
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-logo">
+      <img src="favicon.svg" alt="Shield">
+      <span class="nav-logo-text">ContractGuard</span>
+    </a>
+    <div class="nav-actions">
+      <button class="nav-history-btn" id="navHistoryBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        History
+      </button>
+      <div class="nav-user" id="navUser">
+        <div class="nav-avatar" id="navAvatar">--</div>
+        <span class="nav-user-name" id="navUserName">User</span>
+        <div class="nav-dropdown" id="navDropdown">
+          <button class="nav-dropdown-item" id="navLogoutBtn">
+            Sign Out
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Animated Background ── -->
+  <div class="bg-mesh">
+    <div class="orb" style="top: 20%; left: 10%; width: 300px; height: 300px; background: rgba(124, 58, 237, 0.1); animation: orbFloat 15s infinite alternate;"></div>
+    <div class="orb" style="bottom: 10%; right: 5%; width: 400px; height: 400px; background: rgba(6, 182, 212, 0.08); animation: orbFloat 20s infinite alternate-reverse;"></div>
+    <div class="orb" style="top: 40%; right: 30%; width: 250px; height: 250px; background: rgba(59, 130, 246, 0.07); animation: orbFloat 18s infinite alternate;"></div>
+  </div>
+  <div class="noise-overlay"></div>
+
+  <!-- ── Main App Container ── -->
+  <div class="main-container">
+
+    <!-- ══════════════════════════ HERO ══════════════════════════ -->
+    <header class="hero">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        100% Private — Contracts never leave your device
+      </div>
+      <h1>
+        <span class="gradient-text typewriter" data-text="Contract Risk"></span><br>
+        Analyzer
+      </h1>
+      <p class="subtitle fade-up-element">
+        Paste your freelance contract and instantly detect risky clauses, 
+        understand legal jargon in plain English, and get safer alternatives.
+      </p>
+    </header>
+
+    <!-- ══════════════════════════ INPUT SECTION ══════════════════════════ -->
+    <section class="input-section fade-up-element" id="inputSection">
+      <div class="input-card tilt-card">
+        
+        <!-- Tab Navigation -->
+        <div class="input-tabs">
+          <button class="tab-btn active" data-tab="paste" id="tabPaste">
+            Paste Text
+          </button>
+          <button class="tab-btn" data-tab="upload" id="tabUpload">
+            Upload File
+          </button>
+          <button class="tab-btn" data-tab="samples" id="tabSamples">
+            Try a Sample
+          </button>
+        </div>
+
+        <!-- Tab: Paste -->
+        <div class="tab-panel active" id="tab-paste">
+          <div 
+            id="contractText"
+            class="contract-textarea editor-div" 
+            contenteditable="true"
+            data-placeholder="Paste your contract text here..."
+            spellcheck="false"
+          ></div>
+          <div class="textarea-footer">
+            <span><span id="charCount">0</span> characters</span>
+            <span>Min. 50 characters to analyze</span>
+          </div>
+        </div>
+
+        <!-- Tab: Upload -->
+        <div class="tab-panel" id="tab-upload">
+          <div class="drop-zone" id="dropZone">
+            <input type="file" id="fileInput" accept=".txt,.md,.rtf">
+            <span class="drop-zone-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:40px;height:40px;opacity:0.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+            </span>
+            <div class="drop-zone-text">
+              Drop your contract file here, or <strong style="color: var(--accent-violet);">click to browse</strong>
+            </div>
+            <div class="drop-zone-hint">Supports .txt and .md files</div>
+          </div>
+        </div>
+
+        <!-- Tab: Samples -->
+        <div class="tab-panel" id="tab-samples">
+          <div class="sample-grid">
+            <!-- Option 1 -->
+            <div class="sample-card tilt-card fade-up-element" data-sample="safe">
+              <div class="sample-card-label sample-safe">Fair Contract</div>
+              <div class="sample-card-desc">A balanced freelance design contract with milestone payments, revision limits, and mutual protections.</div>
+            </div>
+            <!-- Option 2 -->
+            <div class="sample-card tilt-card fade-up-element" data-sample="mixed">
+              <div class="sample-card-label sample-mixed">Mixed Contract</div>
+              <div class="sample-card-desc">A consulting agreement with some fair terms but a few clauses that need negotiation.</div>
+            </div>
+            <!-- Option 3 -->
+            <div class="sample-card tilt-card fade-up-element" data-sample="risky">
+              <div class="sample-card-label sample-risky">Risky Contract</div>
+              <div class="sample-card-desc">A web development contract loaded with red flags — unlimited revisions, no portfolio use, extended payment terms.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Analyze Button -->
+        <div class="analyze-section">
+          <button class="btn-analyze" id="analyzeBtn" disabled>
+            <span class="btn-text">Analyze Contract</span>
+            <span class="spinner">
+              <span class="spinner-dot"></span>
+              <span class="spinner-dot"></span>
+              <span class="spinner-dot"></span>
+            </span>
+          </button>
+          <div style="display: flex; gap: var(--space-sm); width: 100%; justify-content: flex-end;">
+            <button class="btn-clear" id="clearBtn">Clear</button>
+            <button class="btn-clear" id="exportBtn" style="display: none; background: rgba(6, 182, 212, 0.1); border-color: rgba(6, 182, 212, 0.3); color: var(--accent-cyan);">
+              Export PDF
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ RESULTS SECTION ══════════════════════════ -->
+    <section class="results-section fade-up-element" id="resultsSection">
+
+      <!-- Dashboard -->
+      <div class="dashboard">
+        
+        <!-- Left: Big Gauge -->
+        <div class="gauge-card tilt-card">
+          <div class="gauge-wrapper">
+            <div class="gauge-ring" id="gaugeRing">
+              <div class="gauge-inner">
+                <div class="gauge-score" id="gaugeScore">0</div>
+                <div class="gauge-label">Risk Score</div>
+              </div>
+            </div>
+          </div>
+          <div class="gauge-verdict" id="gaugeVerdict">Analyzing...</div>
+          <div class="gauge-sublabel" id="gaugeSublabel"></div>
+        </div>
+
+        <!-- Right: Stats -->
+        <div class="stats-card tilt-card">
+          <div class="stats-header">Risk Breakdown by Category</div>
+          <div class="category-grid" id="categoryGrid">
+            <!-- Filled by JS -->
+          </div>
+          <div class="risk-summary-bar" id="riskSummaryBar">
+            <!-- Filled by JS -->
+          </div>
+          <div class="risk-summary-legend">
+            <div class="legend-item">
+              <span class="legend-dot" style="background: var(--risk-low);"></span>
+              <span id="legendLow">0 Low</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot" style="background: var(--risk-medium);"></span>
+              <span id="legendMedium">0 Medium</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot" style="background: var(--risk-high);"></span>
+              <span id="legendHigh">0 High</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot" style="background: var(--risk-critical);"></span>
+              <span id="legendCritical">0 Critical</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Clause-by-Clause Breakdown -->
+      <div class="clauses-section">
+        <div class="section-header">
+          <div class="section-title">Detailed Findings</div>
+          <div class="filter-pills">
+            <button class="filter-pill active" data-filter="all" id="filterAll">All</button>
+            <button class="filter-pill" data-filter="critical" id="filterCritical">Critical</button>
+            <button class="filter-pill" data-filter="high" id="filterHigh">High</button>
+            <button class="filter-pill" data-filter="medium" id="filterMedium">Medium</button>
+            <button class="filter-pill" data-filter="low" id="filterLow">Low</button>
+          </div>
+        </div>
+        <div class="clause-cards" id="clauseCards">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════ DISCLAIMER ══════════════════════════ -->
+    <div class="disclaimer">
+      <div class="disclaimer-text">
+        <strong>Legal Disclaimer:</strong> This tool provides automated pattern-based analysis for educational purposes only. 
+        It does <strong>not</strong> constitute legal advice. Always consult a qualified attorney before signing any contract. 
+        Your contract text is analyzed entirely in your browser and is never sent to any server.
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>Contract Risk Analyzer for Freelancers · Built with care for the freelance community</p>
+      <p style="margin-top: 4px; opacity: 0.5;">Your data never leaves your device</p>
+    </footer>
+
+  </div>
+
+  <!-- ── History Sidebar ── -->
+  <div class="history-sidebar" id="historySidebar">
+    <div class="history-header">
+      <h2>Analysis History</h2>
+      <button class="close-history-btn" id="closeHistoryBtn">&times;</button>
+    </div>
+    <div class="history-list" id="historyList">
+      <!-- Populated by JS -->
+      <div class="history-empty">No past analyses found.</div>
+    </div>
+  </div>
+
+  <!-- ── Interactive Tooltip for Inline Editing ── -->
+  <div class="inline-tooltip" id="inlineTooltip">
+    <div class="tooltip-header">Suggested Fix</div>
+    <div class="tooltip-suggestion" id="tooltipSuggestion"></div>
+    <button class="tooltip-apply-btn" id="tooltipApplyBtn">Apply Fix</button>
+  </div>
+
+  <!-- ── Analyzing Overlay ── -->
+  <div class="analyzing-overlay" id="analyzingOverlay">
+    <div class="analyzing-spinner"></div>
+    <div class="analyzing-text">Analyzing your contract...</div>
+    <div class="analyzing-subtext">Scanning for risky clauses and red flags</div>
+  </div>
+
+  <!-- ── Toast Container ── -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ── Scroll-to-top ── -->
+  <button class="scroll-top-btn" id="scrollTopBtn" aria-label="Scroll to top">↑</button>
+
+  <!-- ── History Panel ── -->
+  <div class="history-backdrop" id="historyBackdrop"></div>
+  <div class="history-panel" id="historyPanel">
+    <div class="history-header">
+      <div class="history-title">Analysis History</div>
+      <button class="history-close" id="historyClose">✕</button>
+    </div>
+    <div class="history-list" id="historyList">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+
+  <!-- ── Scripts ── -->
+  <script src="https://unpkg.com/compromise"></script>
+  <script src="animations.js"></script>
+  <script src="contracts.js"></script>
+  <script src="auth.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>

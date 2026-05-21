@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sign in to Contract Risk Analyzer — protect your freelance business by analyzing contracts for risky clauses.">
+  <meta name="theme-color" content="#0a0e1a">
+  <title>Sign In — Contract Risk Analyzer</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+
+  <!-- ── Global Loader ── -->
+  <div id="global-loader">
+    <img src="favicon.svg" alt="ContractGuard" class="loader-logo">
+    <div class="loader-bar-container">
+      <div class="loader-bar"></div>
+    </div>
+  </div>
+
+  <!-- ── Custom Cursor ── -->
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- ── Scroll Progress ── -->
+  <div id="scroll-progress-container">
+    <div id="scroll-progress"></div>
+  </div>
+
+  <!-- ── Particle Canvas Background ── -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- Animated Background -->
+  <div class="bg-mesh">
+    <div class="orb" style="top: 20%; left: 10%; width: 300px; height: 300px; background: rgba(124, 58, 237, 0.1); animation: orbFloat 15s infinite alternate;"></div>
+    <div class="orb" style="bottom: 10%; right: 5%; width: 400px; height: 400px; background: rgba(6, 182, 212, 0.08); animation: orbFloat 20s infinite alternate-reverse;"></div>
+    <div class="orb" style="top: 40%; right: 30%; width: 250px; height: 250px; background: rgba(59, 130, 246, 0.07); animation: orbFloat 18s infinite alternate;"></div>
+  </div>
+  <div class="noise-overlay"></div>
+
+  <!-- ── Auth Container ── -->
+  <div class="auth-wrapper">
+
+    <!-- Left Panel: Branding -->
+    <div class="auth-brand">
+      <div class="auth-brand-content">
+        <div class="brand-logo">
+          <img src="favicon.svg" alt="Shield" class="brand-logo-icon">
+          <span class="brand-logo-text">ContractGuard</span>
+        </div>
+        <h1 class="brand-headline"><span class="gradient-text typewriter" data-text="Protect your freelance business"></span></h1>
+        <p class="brand-subtitle fade-up-element">
+          Analyze contracts for risky clauses, understand legal jargon in plain English, 
+          and get safer alternatives — all in seconds.
+        </p>
+        <div class="brand-features">
+          <div class="brand-feature">
+            <span class="brand-feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </span>
+            <div>
+              <div class="brand-feature-title">50+ Risk Patterns</div>
+              <div class="brand-feature-desc">Detects unfair payment, IP, non-compete, and liability clauses</div>
+            </div>
+          </div>
+          <div class="brand-feature">
+            <span class="brand-feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span>
+            <div>
+              <div class="brand-feature-title">100% Private</div>
+              <div class="brand-feature-desc">Your contracts never leave your browser</div>
+            </div>
+          </div>
+          <div class="brand-feature">
+            <span class="brand-feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </span>
+            <div>
+              <div class="brand-feature-title">Track Your History</div>
+              <div class="brand-feature-desc">Save and review past contract analyses</div>
+            </div>
+          </div>
+        </div>
+        <div class="brand-testimonial tilt-card fade-up-element">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"Caught a 3-year non-compete buried in page 8. This tool saved my career."</p>
+          <p class="testimonial-author">— Sarah K., Freelance Designer</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel: Auth Forms -->
+    <div class="auth-panel fade-up-element">
+      <div class="auth-panel-inner tilt-card">
+
+        <!-- Mobile Logo (shown only on small screens) -->
+        <div class="auth-mobile-logo">
+          <img src="favicon.svg" alt="Shield" class="brand-logo-icon">
+          <span class="brand-logo-text">ContractGuard</span>
+        </div>
+
+        <!-- Form Toggle -->
+        <div class="auth-toggle">
+          <button class="auth-toggle-btn active" id="toggleLogin" data-mode="login">Sign In</button>
+          <button class="auth-toggle-btn" id="toggleRegister" data-mode="register">Create Account</button>
+          <div class="auth-toggle-slider" id="toggleSlider"></div>
+        </div>
+
+        <!-- Login Form -->
+        <form class="auth-form active" id="loginForm" autocomplete="on">
+          <h2 class="auth-form-title">Welcome back</h2>
+          <p class="auth-form-subtitle">Sign in to access your contract analyses</p>
+
+          <div class="form-group">
+            <label class="form-label" for="loginEmail">Email address</label>
+            <div class="input-wrapper">
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </span>
+              <input 
+                type="email" 
+                id="loginEmail" 
+                class="form-input" 
+                placeholder="you@example.com" 
+                autocomplete="email"
+                required
+              >
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="loginPassword">Password</label>
+            <div class="input-wrapper">
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </span>
+              <input 
+                type="password" 
+                id="loginPassword" 
+                class="form-input" 
+                placeholder="Enter your password" 
+                autocomplete="current-password"
+                required
+              >
+              <button type="button" class="toggle-password" id="toggleLoginPw" aria-label="Toggle password visibility">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="checkbox-label">
+              <input type="checkbox" id="rememberMe" checked>
+              <span class="checkbox-custom"></span>
+              Remember me
+            </label>
+          </div>
+
+          <div class="form-error" id="loginError"></div>
+
+          <button type="submit" class="btn-auth" id="loginBtn">
+            <span class="btn-auth-text">Sign In</span>
+            <span class="btn-auth-spinner">
+              <span class="spinner-dot"></span>
+              <span class="spinner-dot"></span>
+              <span class="spinner-dot"></span>
+            </span>
+          </button>
+
+          <p class="auth-switch">
+            Don't have an account? <a href="#" id="switchToRegister">Create one free</a>
+          </p>
+        </form>
+
+        <!-- Register Form -->
+        <form class="auth-form" id="registerForm" autocomplete="on">
+          <h2 class="auth-form-title">Create your account</h2>
+          <p class="auth-form-subtitle">Start analyzing contracts in under a minute</p>
+
+          <div class="form-group">
+            <label class="form-label" for="registerName">Full name</label>
+            <div class="input-wrapper">
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </span>
+              <input 
+                type="text" 
+                id="registerName" 
+                class="form-input" 
+                placeholder="John Doe" 
+                autocomplete="name"
+                required
+              >
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="registerEmail">Email address</label>
+            <div class="input-wrapper">
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </span>
+              <input 
+                type="email" 
+                id="registerEmail" 
+                class="form-input" 
+                placeholder="you@example.com" 
+                autocomplete="email"
+                required
+              >
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="registerPassword">Password</label>
+            <div class="input-wrapper">
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </span>
+              <input 
+                type="password" 
+                id="registerPassword" 
+                class="form-input" 
+                placeholder="Min. 6 characters" 
+                autocomplete="new-password"
+                required
+                minlength="6"
+              >
+              <button type="button" class="toggle-password" id="toggleRegisterPw" aria-label="Toggle password visibility">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <div class="password-strength" id="passwordStrength">
+              <div class="strength-bar">
+                <div class="strength-bar-fill" id="strengthBarFill"></div>
+              </div>
+              <span class="strength-label" id="strengthLabel"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="registerConfirm">Confirm password</label>
+            <div class="input-wrapper">
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </span>
+              <input 
+                type="password" 
+                id="registerConfirm" 
+                class="form-input" 
+                placeholder="Re-enter your password" 
+                autocomplete="new-password"
+                required
+                minlength="6"
+              >
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="checkbox-label">
+              <input type="checkbox" id="agreeTerms" required>
+              <span class="checkbox-custom"></span>
+              I agree that this tool provides analysis, not legal advice
+            </label>
+          </div>
+
+          <div class="form-error" id="registerError"></div>
+
+          <button type="submit" class="btn-auth" id="registerBtn">
+            <span class="btn-auth-text">Create Account</span>
+            <span class="btn-auth-spinner">
+              <span class="spinner-dot"></span>
+              <span class="spinner-dot"></span>
+              <span class="spinner-dot"></span>
+            </span>
+          </button>
+
+          <p class="auth-switch">
+            Already have an account? <a href="#" id="switchToLogin">Sign in</a>
+          </p>
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="animations.js"></script>
+  <script src="auth.js"></script>
+  <script>
+    // ── Auth Page Controller ──
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const toggleLogin = document.getElementById('toggleLogin');
+    const toggleRegister = document.getElementById('toggleRegister');
+    const toggleSlider = document.getElementById('toggleSlider');
+    const toastContainer = document.getElementById('toastContainer');
+
+    // Redirect if already logged in
+    if (auth.isLoggedIn()) {
+      window.location.href = 'index.html';
+    }
+
+    // ── Mode Switching ──
+    function switchMode(mode) {
+      if (mode === 'login') {
+        loginForm.classList.add('active');
+        registerForm.classList.remove('active');
+        toggleLogin.classList.add('active');
+        toggleRegister.classList.remove('active');
+        toggleSlider.style.transform = 'translateX(0)';
+      } else {
+        loginForm.classList.remove('active');
+        registerForm.classList.add('active');
+        toggleLogin.classList.remove('active');
+        toggleRegister.classList.add('active');
+        toggleSlider.style.transform = 'translateX(100%)';
+      }
+      // Clear errors
+      document.getElementById('loginError').textContent = '';
+      document.getElementById('registerError').textContent = '';
+    }
+
+    toggleLogin.addEventListener('click', () => switchMode('login'));
+    toggleRegister.addEventListener('click', () => switchMode('register'));
+    document.getElementById('switchToRegister').addEventListener('click', (e) => { e.preventDefault(); switchMode('register'); });
+    document.getElementById('switchToLogin').addEventListener('click', (e) => { e.preventDefault(); switchMode('login'); });
+
+    // ── Password Visibility Toggle ──
+    function setupPasswordToggle(toggleId, inputId) {
+      const toggle = document.getElementById(toggleId);
+      const input = document.getElementById(inputId);
+      const eyeOpen = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+      const eyeOff = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+      toggle.addEventListener('click', () => {
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        toggle.innerHTML = isPassword ? eyeOff : eyeOpen;
+      });
+    }
+    setupPasswordToggle('toggleLoginPw', 'loginPassword');
+    setupPasswordToggle('toggleRegisterPw', 'registerPassword');
+
+    // ── Password Strength Meter ──
+    const registerPassword = document.getElementById('registerPassword');
+    const strengthBarFill = document.getElementById('strengthBarFill');
+    const strengthLabel = document.getElementById('strengthLabel');
+    const passwordStrength = document.getElementById('passwordStrength');
+
+    registerPassword.addEventListener('input', () => {
+      const val = registerPassword.value;
+      if (val.length === 0) {
+        passwordStrength.style.opacity = '0';
+        return;
+      }
+      passwordStrength.style.opacity = '1';
+      const strength = auth.getPasswordStrength(val);
+      strengthBarFill.style.width = strength.percent + '%';
+      strengthBarFill.style.background = strength.color;
+      strengthLabel.textContent = strength.label;
+      strengthLabel.style.color = strength.color;
+    });
+
+    // ── Login Submit ──
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const errorEl = document.getElementById('loginError');
+      const btn = document.getElementById('loginBtn');
+
+      btn.classList.add('loading');
+      errorEl.textContent = '';
+
+      await new Promise(r => setTimeout(r, 800));
+
+      const result = await auth.login(email, password);
+      btn.classList.remove('loading');
+
+      if (result.success) {
+        showToast('Welcome back, ' + result.user.name + '!');
+        await new Promise(r => setTimeout(r, 600));
+        window.location.href = 'index.html';
+      } else {
+        errorEl.textContent = result.error;
+        errorEl.classList.add('visible');
+      }
+    });
+
+    // ── Register Submit ──
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('registerName').value;
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+      const confirm = document.getElementById('registerConfirm').value;
+      const errorEl = document.getElementById('registerError');
+      const btn = document.getElementById('registerBtn');
+
+      errorEl.textContent = '';
+
+      if (password !== confirm) {
+        errorEl.textContent = 'Passwords do not match.';
+        errorEl.classList.add('visible');
+        return;
+      }
+
+      btn.classList.add('loading');
+
+      await new Promise(r => setTimeout(r, 800));
+
+      const result = await auth.register(name, email, password);
+      btn.classList.remove('loading');
+
+      if (result.success) {
+        showToast('Account created! Please sign in.');
+        
+        // Auto-fill the email in login form
+        document.getElementById('loginEmail').value = email;
+        document.getElementById('loginPassword').value = '';
+        
+        // Clear register form
+        registerForm.reset();
+        document.getElementById('passwordStrength').style.opacity = '0';
+        
+        await new Promise(r => setTimeout(r, 800));
+        switchMode('login');
+      } else {
+        errorEl.textContent = result.error;
+        errorEl.classList.add('visible');
+      }
+    });
+
+    // ── Toast ──
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      toastContainer.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.add('leaving');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+  </script>
+
+</body>
+</html>
