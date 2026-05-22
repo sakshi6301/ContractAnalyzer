@@ -66,7 +66,7 @@ Either party may terminate this agreement with 14 days written notice. Upon term
 Both parties agree to keep confidential any proprietary information shared during this project. This obligation lasts for 2 years after the termination of this agreement. The Designer may disclose the existence of this working relationship and display deliverables in their portfolio.
 
 7. LIABILITY
-Each party's total liability under this agreement is limited to the total fees paid or payable under this agreement. Neither party shall be liable for indirect, incidental, or consequential damages. The Designer is not liable for any losses arising from the Client's use of the deliverables.
+Each party shall indemnify the other against claims arising from their own negligence. Each party's total liability under this agreement is limited to the total fees paid or payable under this agreement. Neither party shall be liable for indirect, incidental, or consequential damages.
 
 8. DISPUTE RESOLUTION
 Any disputes shall first be addressed through good-faith negotiation between the parties. If unresolved within 30 days, disputes will be submitted to mediation. The costs of mediation shall be shared equally. This agreement is governed by the laws of the state in which the Designer is located.`

@@ -29,6 +29,14 @@ const RISK_PATTERNS = {
         suggestion: `Payment shall be made within 14 days of invoice date. A deposit of 50% is due before work commences, with the remaining balance due upon delivery of final deliverables.`
       },
       {
+        regex: /payment\s+(?:is|shall\s+be|will\s+be)\s+(?:due|made)\s+(?:in\s+full\s+)?within\s+(1[0-5]|[1-9])\s+days/i,
+        nlpQuery: 'payment (is|due) within (15|14|10|7) days',
+        check: () => ({ severity: 'balanced', score: 0 }),
+        title: 'Favorable Payment Terms',
+        explain: () => `The contract specifies payment within 15 days or less. This is highly favorable to you and represents a balanced, professional relationship.`,
+        suggestion: `This is a great clause! No changes needed.`
+      },
+      {
         regex: /no\s+(?:partial|milestone)\s+payments/i,
         check: () => ({ severity: 'high', score: 80 }),
         title: 'No Milestone Payments',
@@ -70,6 +78,14 @@ const RISK_PATTERNS = {
         title: 'Work-for-Hire Classification',
         explain: () => `"Work made for hire" means you have ZERO ownership of what you create — the client is legally considered the author. This is common but can be risky if it also prevents portfolio use.`,
         suggestion: `The final approved deliverables shall be assigned to the Client upon receipt of full payment. The Contractor retains the right to use the work in their portfolio and for self-promotion.`
+      },
+      {
+        regex: /(?:assigns?|transfers?|grants?).*?(?:all|exclusive).*?(?:copyrights?|intellectual\s+property\s+rights?)/i,
+        nlpQuery: '(assign|transfer|grant) (all|exclusive) (copyright|rights)',
+        check: () => ({ severity: 'high', score: 70 }),
+        title: 'Full Copyright Transfer',
+        explain: () => `A copyright gives the creator exclusive rights to their work. This clause forces you to permanently transfer ALL your copyrights to the client. Unless they are paying a premium for full ownership, it's often better to grant them a "license to use" the work while you retain the underlying copyright.`,
+        suggestion: `The Contractor grants the Client a perpetual, non-exclusive, worldwide license to use, modify, and reproduce the final deliverables for their intended business purpose. The Contractor retains the underlying copyright to the work.`
       },
       {
         regex: /(?:not|shall\s+not)\s+(?:to\s+)?use\s+any\s+portion.*portfolio/i,
@@ -148,6 +164,14 @@ const RISK_PATTERNS = {
         title: 'One-Sided Indemnification',
         explain: () => `You're agreeing to pay for the client's legal defense if any claims arise from your work. This should be mutual — both parties should indemnify each other, and it should be limited to negligence or misconduct.`,
         suggestion: `Each party shall indemnify the other against claims arising from their own negligence or willful misconduct. The indemnifying party's obligations are limited to the total fees paid under this agreement.`
+      },
+      {
+        regex: /(?:mutual(?:ly)?\s+indemnify|each\s+party\s+shall\s+indemnify)/i,
+        nlpQuery: 'each party shall indemnify',
+        check: () => ({ severity: 'balanced', score: 0 }),
+        title: 'Mutual Indemnification',
+        explain: () => `Both parties agree to protect each other from third-party claims. This is a sign of a balanced, fair contract.`,
+        suggestion: `This is a great clause! No changes needed.`
       },
       {
         regex: /regardless\s+of\s+fault/i,
@@ -462,6 +486,7 @@ class ContractAnalyzer {
         high: this.findings.filter(f => f.severity === 'high').length,
         medium: this.findings.filter(f => f.severity === 'medium').length,
         low: this.findings.filter(f => f.severity === 'low').length,
+        balanced: this.findings.filter(f => f.severity === 'balanced').length,
       }
     };
   }
@@ -977,11 +1002,20 @@ class App {
       seg.style.cssText = `flex: ${stats.critical}; background: var(--risk-critical);`;
       this.riskSummaryBar.appendChild(seg);
     }
+    if (stats.balanced > 0) {
+      const seg = document.createElement('div');
+      seg.className = 'segment';
+      seg.style.cssText = `flex: ${stats.balanced}; background: var(--risk-balanced);`;
+      this.riskSummaryBar.appendChild(seg);
+    }
 
     this.legendLow.textContent = `${stats.low} Low`;
     this.legendMedium.textContent = `${stats.medium} Medium`;
     this.legendHigh.textContent = `${stats.high} High`;
     this.legendCritical.textContent = `${stats.critical} Critical`;
+    if(document.getElementById('legendBalanced')) {
+        document.getElementById('legendBalanced').textContent = `${stats.balanced} Balanced`;
+    }
   }
 
   // ── Render Clause Cards ──

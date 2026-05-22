@@ -37,14 +37,16 @@
   --accent-gradient-h: linear-gradient(90deg, #7c3aed 0%, #06b6d4 100%);
 
   /* Risk Colors */
-  --risk-low: #10b981;
-  --risk-low-bg: rgba(16, 185, 129, 0.1);
-  --risk-medium: #f59e0b;
-  --risk-medium-bg: rgba(245, 158, 11, 0.1);
-  --risk-high: #ef4444;
-  --risk-high-bg: rgba(239, 68, 68, 0.1);
-  --risk-critical: #dc2626;
-  --risk-critical-bg: rgba(220, 38, 38, 0.12);
+  --risk-critical: #ef4444;
+  --risk-critical-bg: rgba(239, 68, 68, 0.12);
+  --risk-high: #f97316;
+  --risk-high-bg: rgba(249, 115, 22, 0.1);
+  --risk-medium: #eab308;
+  --risk-medium-bg: rgba(234, 179, 8, 0.1);
+  --risk-low: #22c55e;
+  --risk-low-bg: rgba(34, 197, 94, 0.1);
+  --risk-balanced: #3b82f6;
+  --risk-balanced-bg: rgba(59, 130, 246, 0.1);
 
   /* Text */
   --text-primary: #f1f5f9;
@@ -1646,6 +1648,7 @@ footer a {
 .risk-highlight.high { background: rgba(249, 115, 22, 0.25); border-bottom: 2px solid var(--risk-high); }
 .risk-highlight.medium { background: rgba(234, 179, 8, 0.25); border-bottom: 2px solid var(--risk-medium); }
 .risk-highlight.low { background: rgba(34, 197, 94, 0.25); border-bottom: 2px solid var(--risk-low); }
+.risk-highlight.balanced { background: rgba(59, 130, 246, 0.25); border-bottom: 2px solid var(--risk-balanced); }
 
 .risk-highlight:hover {
   filter: brightness(1.2);
